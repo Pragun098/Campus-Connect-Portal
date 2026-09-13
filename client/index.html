@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Campus Connect Portal | Experiment 3</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="navbar">
+
+    <div class="logo-group">
+
+      <div class="brand-badge">RV</div>
+
+      <div>
+        <span class="university-name">
+          RV UNIVERSITY<sup>®</sup>
+        </span>
+
+        <p class="sub-dept">
+          School of Computer Science & Engineering
+        </p>
+      </div>
+
+    </div>
+
+    <nav class="nav-actions">
+      <a href="#login" class="btn-secondary">Login</a>
+      <a href="#register" class="btn-primary">Register</a>
+    </nav>
+
+  </header>
+
+
+  <!-- Main Content -->
+  <main>
+
+    <!-- Hero Section -->
+    <section class="hero-banner">
+
+      <div class="hero-content">
+
+        <span class="module-tag">
+          CS3301 - FULL STACK DEVELOPMENT
+        </span>
+
+        <h1>
+          CAMPUS CONNECT PORTAL
+        </h1>
+
+        <p class="subtitle">
+          Connecting Students, Faculty, and Administrators
+          on a Single Digital Platform.
+        </p>
+
+        <button id="welcomeBtn" class="btn-hero-primary">
+          Click for Welcome Message
+        </button>
+
+        <p id="welcomeMessage" class="welcome-message">
+          Welcome to Campus Connect!
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- Portal Section -->
+    <section class="section-container" id="roles">
+
+      <h2 class="section-title">
+        Campus Life & Portal Highlights
+      </h2>
+
+      <p class="section-subtitle">
+        Experience academic management simplified through modern technology.
+      </p>
+
+
+      <div class="card-container">
+
+        <!-- Student Card -->
+        <article class="portal-card">
+
+          <img
+            src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1000&auto=format&fit=crop"
+            alt="University campus building">
+
+          <div class="card-content">
+
+            <h3>Student Portal</h3>
+
+            <p>
+              Students can access courses, announcements,
+              schedules and academic information.
+            </p>
+
+            <a href="#" class="card-link">
+              Student Access
+            </a>
+
+          </div>
+
+        </article>
+
+
+        <!-- Faculty Card -->
+        <article class="portal-card">
+
+          <img
+            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1000&auto=format&fit=crop"
+            alt="Students working together">
+
+          <div class="card-content">
+
+            <h3>Faculty Portal</h3>
+
+            <p>
+              Faculty members can manage classes,
+              announcements and student activities.
+            </p>
+
+            <a href="#" class="card-link">
+              Faculty Access
+            </a>
+
+          </div>
+
+        </article>
+
+
+        <!-- Administration Card -->
+        <article class="portal-card">
+
+          <img
+            src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1000&auto=format&fit=crop"
+            alt="Digital academic management">
+
+          <div class="card-content">
+
+            <h3>Administration Portal</h3>
+
+            <p>
+              Administrators can manage university services,
+              records and campus activities.
+            </p>
+
+            <a href="#" class="card-link">
+              Admin Access
+            </a>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- JavaScript Interaction Section -->
+    <section class="interaction-section">
+
+      <h2>Student Activity</h2>
+
+      <p>
+        Enter your name below and add a campus activity.
+      </p>
+
+
+      <!-- Text Input -->
+      <div class="input-area">
+
+        <label for="studentName">
+          Enter your name:
+        </label>
+
+        <input
+          type="text"
+          id="studentName"
+          placeholder="Type your name..."
+        >
+
+        <p id="nameOutput">
+          Your name will appear here.
+        </p>
+
+      </div>
+
+
+      <!-- Keyboard Event -->
+      <div class="keyboard-area">
+
+        <label for="activityInput">
+          Enter a campus activity:
+        </label>
+
+        <input
+          type="text"
+          id="activityInput"
+          placeholder="Example: Coding Club Meeting"
+        >
+
+        <p id="keyMessage">
+          Press Enter to add the activity.
+        </p>
+
+      </div>
+
+
+      <!-- Add Button -->
+      <button id="addActivityBtn" class="action-button">
+        Add Activity
+      </button>
+
+
+      <!-- Activity List -->
+      <div class="activity-list">
+
+        <h3>Campus Activities</h3>
+
+        <ul id="activityList">
+
+          <li>
+            <span>Welcome Event</span>
+            <button class="remove-btn">Remove</button>
+          </li>
+
+          <li>
+            <span>Programming Workshop</span>
+            <button class="remove-btn">Remove</button>
+          </li>
+
+        </ul>
+
+      </div>
+
+    </section>
+
+
+    <!-- Information Section -->
+    <section class="info-section">
+
+      <h2>Why Use Campus Connect?</h2>
+
+      <div class="info-container">
+
+        <article class="info-box">
+
+          <h3>Easy Access</h3>
+
+          <p>
+            Students and faculty can access important
+            academic information from a single platform.
+          </p>
+
+        </article>
+
+
+        <article class="info-box">
+
+          <h3>Better Communication</h3>
+
+          <p>
+            Important announcements and updates can be
+            shared quickly with the campus community.
+          </p>
+
+        </article>
+
+
+        <article class="info-box">
+
+          <h3>Digital Management</h3>
+
+          <p>
+            Academic activities and university services
+            can be managed more efficiently.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- Footer -->
+  <footer class="footer">
+
+    <p>
+      © 2026 Campus Connect Portal | RV University
+    </p>
+
+    <p>
+      CS3301 - Full Stack Development
+    </p>
+
+  </footer>
+
+
+  <!-- JavaScript File -->
+  <script src="script.js"></script>
+
+</body>
+
+</html>
