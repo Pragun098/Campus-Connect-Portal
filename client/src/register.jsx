@@ -1,85 +1,82 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../style.css";
 
 function Register() {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
 
-    // Registration will be connected to backend later
-    console.log("Registration submitted");
+  function handleRegister(event) {
+    event.preventDefault();
 
-    navigate("/login");
-  };
+    if (name.trim() === "" || email.trim() === "" || password.trim() === "") {
+      setMessage("Please fill all the fields.");
+      return;
+    }
+
+    const user = {
+      name: name,
+      email: email,
+      password: password
+    };
+
+    localStorage.setItem("campusUser", JSON.stringify(user));
+
+    setMessage("Registration successful! Redirecting to login...");
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000);
+  }
 
   return (
-    <div className="auth-page">
-      <div className="auth-card register-card">
-        <div className="auth-header">
-          <h1>Create Account</h1>
-          <p>Join the Campus Connect community</p>
-        </div>
+    <main className="auth-page">
+      <div className="auth-box">
+        <h1>Create Account</h1>
+        <p>Register for Campus Connect Portal</p>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Full Name</label>
-            <input
-              type="text"
-              placeholder="Enter your full name"
-              required
-            />
-          </div>
+        <form onSubmit={handleRegister}>
+          <label>Name</label>
+          <input
+            type="text"
+            placeholder="Enter your name"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
 
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
+          <label>Email</label>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
 
-          <div className="form-group">
-            <label>USN</label>
-            <input
-              type="text"
-              placeholder="Enter your USN"
-              required
-            />
-          </div>
+          <label>Password</label>
+          <input
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
 
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              placeholder="Create a password"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Confirm Password</label>
-            <input
-              type="password"
-              placeholder="Confirm your password"
-              required
-            />
-          </div>
-
-          <button type="submit" className="auth-btn">
-            Create Account
-          </button>
+          <button type="submit">Register</button>
         </form>
 
-        <div className="auth-footer">
-          <p>
-            Already have an account?{" "}
-            <Link to="/login">Login</Link>
-          </p>
-        </div>
+        {message && <p className="auth-message">{message}</p>}
+
+        <p className="auth-link">
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+
+        <Link to="/" className="back-link">
+          ← Back to Campus Connect
+        </Link>
       </div>
-    </div>
+    </main>
   );
 }
 

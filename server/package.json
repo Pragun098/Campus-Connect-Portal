@@ -1,12 +1,23 @@
 {
-  "name": "server",
+  "name": "campus-connect-server",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Campus Connect Portal RESTful Backend Service - CS3301 Experiment 6",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "express",
+    "rest-api",
+    "crud",
+    "node"
+  ],
+  "author": "Pragun Lal Shrestha",
   "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.3.0"
+  }
 }

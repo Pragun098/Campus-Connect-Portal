@@ -1,37 +1,611 @@
-.portal-page { width: min(1180px, 100%); margin: 0 auto; background: #fff; min-height: 100vh; color: #44534d; }
-.portal-header { display: flex; align-items: center; justify-content: space-between; min-height: 92px; padding: 16px 42px; border-bottom: 1px solid #e3e8e4; }
-.university-brand { display: flex; align-items: center; gap: 13px; color: #31504a; text-decoration: none; }
-.university-badge { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid #b6c7bd; border-radius: 50%; color: #47735e; font-size: 12px; font-weight: 700; }
-.university-brand strong { display: block; color: #344d46; font-size: 15px; letter-spacing: 1px; }
-.university-brand sup { font-size: 7px; }
-.university-brand small { display: block; margin-top: 3px; color: #89958f; font-size: 9px; line-height: 1.3; }
-.portal-header nav { display: flex; align-items: center; gap: 13px; }
-.portal-header nav a { color: #52625b; font-size: 14px; text-decoration: none; transition: color .2s, background .2s, transform .2s; }
-.portal-header nav a:hover { color: #255c43; }
-.login-link, .register-link { padding: 9px 20px; border: 1px solid #96afa1; border-radius: 5px; }
-.register-link { color: #fff !important; background: #386e54; border-color: #386e54 !important; }
-.login-link:hover, .register-link:hover { transform: translateY(-2px); box-shadow: 0 5px 12px rgba(48, 99, 73, .2); }
-.portal-hero { display: grid; place-items: center; min-height: 390px; padding: 60px 24px; text-align: center; color: #fff; background: linear-gradient(110deg, rgba(22, 74, 53, .96), rgba(51, 108, 79, .88)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1600&q=80') center/cover; }
-.hero-content { max-width: 680px; }
-.course-label { display: inline-block; padding: 5px 12px; color: #d7ecd9; border: 1px solid rgba(210, 239, 216, .55); border-radius: 3px; font-size: 11px; letter-spacing: 1px; }
-.portal-hero h1 { margin: 20px 0 9px; color: #fff; font-size: clamp(34px, 6vw, 55px); letter-spacing: 1px; line-height: 1.1; }
-.portal-hero p { max-width: 570px; margin: 0 auto; color: #e1eee4; font-size: 16px; }
-.hero-button { display: inline-flex; align-items: center; gap: 16px; margin-top: 27px; padding: 12px 22px; border: 1px solid #d6e9d9; border-radius: 5px; color: #fff; background: rgba(255,255,255,.08); font-size: 14px; text-decoration: none; transition: background .2s, transform .2s, box-shadow .2s; }
-.hero-button:hover { color: #285b43; background: #fff; transform: translateY(-3px); box-shadow: 0 8px 18px rgba(0,0,0,.2); }
-.roles-section { padding: 62px 42px 75px; text-align: center; }
-.section-kicker { margin: 0 0 8px; color: #4a8060; font-size: 11px; font-weight: 700; }
-.roles-section h2 { margin: 0; color: #28433a; font-size: 32px; }
-.section-intro { margin: 10px 0 32px; color: #829089; }
-.role-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; max-width: 980px; margin: 0 auto; text-align: left; }
-.role-card { display: flex; align-items: center; gap: 14px; min-height: 108px; padding: 20px; border: 1px solid #e1e9e3; border-radius: 6px; color: #2c463b; text-decoration: none; transition: transform .2s, border-color .2s, box-shadow .2s; }
-.role-card:hover { border-color: #80a992; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(43, 87, 63, .12); }
-.role-icon { display: grid; flex: 0 0 38px; place-items: center; width: 38px; height: 38px; border-radius: 50%; color: #fff; background: #4e8967; font-weight: 700; }
-.faculty-icon { background: #c29442; }
-.admin-icon { background: #678198; }
-.role-card strong, .role-card small { display: block; }
-.role-card strong { font-size: 15px; }
-.role-card small { margin-top: 4px; color: #85938c; font-size: 12px; line-height: 1.35; }
-.role-card b { margin-left: auto; color: #528568; font-size: 22px; font-weight: 400; transition: transform .2s; }
-.role-card:hover b { transform: translateX(4px); }
-footer { display: flex; justify-content: space-between; padding: 20px 42px; border-top: 1px solid #e3e8e4; color: #9aa59f; font-size: 11px; }
-@media (max-width: 700px) { .portal-header { padding: 14px 20px; }.portal-header nav a:not(.login-link):not(.register-link) { display: none; }.university-brand small { display: none; }.portal-header nav { gap: 7px; }.login-link, .register-link { padding: 8px 11px; font-size: 12px !important; }.portal-hero { min-height: 410px; }.roles-section { padding: 48px 20px 56px; }.role-grid { grid-template-columns: 1fr; }.role-card { min-height: 90px; }footer { flex-direction: column; gap: 6px; padding: 18px 20px; } }
+.portal-page {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  background: #fff;
+  min-height: 100vh;
+  color: #44534d;
+}
+
+.portal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 92px;
+  padding: 16px 42px;
+  border-bottom: 1px solid #e3e8e4;
+}
+
+.university-brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: #31504a;
+  text-decoration: none;
+}
+
+.university-badge {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #b6c7bd;
+  border-radius: 50%;
+  color: #47735e;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.university-brand strong {
+  display: block;
+  color: #344d46;
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+.university-brand small {
+  display: block;
+  margin-top: 3px;
+  color: #89958f;
+  font-size: 9px;
+}
+
+.portal-header nav {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.portal-header nav a {
+  color: #52625b;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.portal-header nav a:hover {
+  color: #255c43;
+}
+
+.login-link,
+.register-link {
+  padding: 9px 20px;
+  border: 1px solid #96afa1;
+  border-radius: 5px;
+}
+
+.register-link {
+  color: #fff !important;
+  background: #386e54;
+  border-color: #386e54 !important;
+}
+
+.portal-hero {
+  display: grid;
+  place-items: center;
+  min-height: 390px;
+  padding: 60px 24px;
+  text-align: center;
+  color: #fff;
+  background:
+    linear-gradient(
+      110deg,
+      rgba(22, 74, 53, .96),
+      rgba(51, 108, 79, .88)
+    ),
+    url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1600&q=80")
+    center / cover;
+}
+
+.hero-content {
+  max-width: 680px;
+}
+
+.course-label {
+  display: inline-block;
+  padding: 5px 12px;
+  color: #d7ecd9;
+  border: 1px solid rgba(210, 239, 216, .55);
+  border-radius: 3px;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.portal-hero h1 {
+  margin: 20px 0 9px;
+  color: #fff;
+  font-size: clamp(34px, 6vw, 55px);
+  letter-spacing: 1px;
+}
+
+.portal-hero p {
+  max-width: 570px;
+  margin: 0 auto;
+  color: #e1eee4;
+  font-size: 16px;
+}
+
+.hero-button {
+  display: inline-block;
+  margin-top: 27px;
+  padding: 12px 22px;
+  border: 1px solid #d6e9d9;
+  border-radius: 5px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.roles-section {
+  padding: 62px 42px 50px;
+  text-align: center;
+}
+
+.section-kicker {
+  margin: 0 0 8px;
+  color: #4a8060;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.roles-section h2 {
+  margin: 0;
+  color: #28433a;
+  font-size: 32px;
+}
+
+.section-intro {
+  margin: 10px 0 32px;
+  color: #829089;
+}
+
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  max-width: 980px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.role-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 108px;
+  padding: 20px;
+  border: 1px solid #e1e9e3;
+  border-radius: 6px;
+  color: #2c463b;
+  text-decoration: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.role-card:hover,
+.role-card:focus-visible {
+  border-color: #9ab5a3;
+  box-shadow: 0 5px 16px rgba(40, 67, 58, .08);
+  transform: translateY(-2px);
+}
+
+.role-card:focus-visible {
+  outline: 3px solid #84ad91;
+  outline-offset: 3px;
+}
+
+.role-icon {
+  display: grid;
+  flex: 0 0 38px;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: #fff;
+  background: #4e8967;
+  font-weight: 700;
+}
+
+.faculty-icon {
+  background: #c29442;
+}
+
+.admin-icon {
+  background: #678198;
+}
+
+.role-card strong,
+.role-card small {
+  display: block;
+}
+
+.role-card strong {
+  font-size: 15px;
+}
+
+.role-card small {
+  margin-top: 4px;
+  color: #85938c;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.role-card b {
+  margin-left: auto;
+  color: #528568;
+  font-size: 22px;
+  font-weight: 400;
+}
+
+
+/* Activity Tracker */
+
+.activity-section {
+  max-width: 850px;
+  margin: 20px auto 60px;
+  padding: 35px;
+  background: #f5f8f6;
+  border: 1px solid #e1e9e3;
+  border-radius: 8px;
+}
+
+.activity-section h2 {
+  margin-top: 0;
+  color: #28433a;
+}
+
+.activity-section p {
+  color: #718078;
+}
+
+.activity-input {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.activity-input input {
+  flex: 1;
+  padding: 11px;
+  border: 1px solid #cbd8d0;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.activity-input button,
+.activity-list button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background: #386e54;
+  cursor: pointer;
+}
+
+.activity-list {
+  padding: 0;
+  list-style: none;
+}
+
+.activity-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #dde5df;
+}
+
+.activity-list li button {
+  background: #8b5c55;
+}
+
+.activity-count {
+  font-weight: 600;
+  color: #386e54 !important;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 42px;
+  border-top: 1px solid #e3e8e4;
+  color: #9aa59f;
+  font-size: 11px;
+}
+
+.portal-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 92px;
+  padding: 16px 42px;
+  border-bottom: 1px solid #e3e8e4;
+}
+
+.portal-detail-header nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.detail-home-link {
+  color: #52625b;
+  font-size: 14px;
+}
+
+.portal-detail-hero {
+  padding: 70px 24px;
+  text-align: center;
+  background: #f3f7f4;
+}
+
+.portal-detail-hero h1 {
+  margin: 8px 0 12px;
+  color: #28433a;
+  font-size: clamp(34px, 5vw, 48px);
+}
+
+.portal-detail-hero > p:not(.section-kicker) {
+  max-width: 650px;
+  margin: 0 auto;
+  color: #718078;
+  line-height: 1.65;
+}
+
+.portal-detail-cta {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 12px 20px;
+  border-radius: 5px;
+  color: #fff;
+  background: #386e54;
+}
+
+.portal-detail-cta:hover,
+.portal-detail-cta:focus-visible {
+  background: #28543f;
+}
+
+.portal-detail-content {
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 54px 32px 64px;
+  text-align: center;
+}
+
+.portal-detail-content h2 {
+  margin: 0;
+  color: #28433a;
+  font-size: 30px;
+}
+
+.portal-detail-intro {
+  margin: 10px 0 30px;
+  color: #829089;
+}
+
+.portal-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  text-align: left;
+}
+
+.portal-feature {
+  padding: 24px;
+  border: 1px solid #e1e9e3;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.portal-feature-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  color: #386e54;
+  background: #eaf2ec;
+  font-weight: 700;
+}
+
+.portal-feature h3 {
+  margin: 16px 0 8px;
+  color: #2c463b;
+  font-size: 17px;
+}
+
+.portal-feature p {
+  margin: 0;
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.portal-detail-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 36px;
+}
+
+.portal-detail-footer p {
+  margin: 0;
+  color: #52625b;
+}
+
+
+@media (max-width: 700px) {
+
+  .portal-header {
+    padding: 14px 20px;
+  }
+
+  .portal-header nav a:not(.login-link):not(.register-link) {
+    display: none;
+  }
+
+  .university-brand small {
+    display: none;
+  }
+
+  .portal-header nav {
+    gap: 7px;
+  }
+
+  .login-link,
+  .register-link {
+    padding: 8px 11px;
+    font-size: 12px !important;
+  }
+
+  .portal-hero {
+    min-height: 410px;
+  }
+
+  .roles-section {
+    padding: 48px 20px 45px;
+  }
+
+  .role-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-detail-header {
+    padding: 14px 20px;
+  }
+
+  .portal-detail-header .university-brand small {
+    display: none;
+  }
+
+  .portal-detail-hero {
+    padding: 55px 20px;
+  }
+
+  .portal-detail-content {
+    padding: 45px 20px;
+  }
+
+  .portal-feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-detail-footer {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .activity-section {
+    margin: 10px 20px 45px;
+    padding: 25px 20px;
+  }
+
+  .activity-input {
+    flex-direction: column;
+  }
+
+  .activity-list li {
+    gap: 10px;
+  }
+
+  footer {
+    flex-direction: column;
+    gap: 6px;
+    padding: 18px 20px;
+  }
+}
+
+/* Login and Register Pages */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f7f6;
+  padding: 30px 20px;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.auth-box h1 {
+  margin: 0 0 8px;
+  color: #28433a;
+  font-size: 30px;
+}
+
+.auth-box > p {
+  margin-bottom: 25px;
+  color: #6f7f78;
+}
+
+.auth-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-box label {
+  color: #344d46;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.auth-box input {
+  padding: 12px;
+  border: 1px solid #cbd6d1;
+  border-radius: 6px;
+  font-size: 15px;
+  outline: none;
+}
+
+.auth-box input:focus {
+  border-color: #386e54;
+}
+
+.auth-box form button {
+  margin-top: 15px;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #386e54;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.auth-box form button:hover {
+  background: #28543f;
+}
+
+.auth-message {
+  margin-top: 15px;
+  color: #386e54 !important;
+  font-size: 14px;
+}
+
+.auth-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.auth-link a {
+  color: #386e54;
+  font-weight: 600;
+}
+
+.back-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #52625b;
+  text-decoration: none;
+  font-size: 14px;
+}

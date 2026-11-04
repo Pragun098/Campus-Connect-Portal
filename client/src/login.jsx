@@ -1,69 +1,73 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../style.css";
 
 function Login() {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
 
-    // Authentication will be connected to backend later
-    console.log("Login submitted");
+  function handleLogin(event) {
+    event.preventDefault();
 
-    navigate("/");
-  };
+    const savedUser = JSON.parse(localStorage.getItem("campusUser"));
+
+    if (!savedUser) {
+      setMessage("No account found. Please register first.");
+      return;
+    }
+
+    if (email === savedUser.email && password === savedUser.password) {
+      setMessage("Login successful! Welcome to Campus Connect.");
+
+      localStorage.setItem("isLoggedIn", "true");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } else {
+      setMessage("Incorrect email or password.");
+    }
+  }
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1>Welcome Back</h1>
-          <p>Login to your Campus Connect account</p>
-        </div>
+    <main className="auth-page">
+      <div className="auth-box">
+        <h1>Login</h1>
+        <p>Login to Campus Connect Portal</p>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
+        <form onSubmit={handleLogin}>
+          <label>Email</label>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
 
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
+          <label>Password</label>
+          <input
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
 
-          <div className="form-options">
-            <label className="remember-me">
-              <input type="checkbox" />
-              Remember me
-            </label>
-
-            <a href="#" onClick={(e) => e.preventDefault()}>
-              Forgot Password?
-            </a>
-          </div>
-
-          <button type="submit" className="auth-btn">
-            Login
-          </button>
+          <button type="submit">Login</button>
         </form>
 
-        <div className="auth-footer">
-          <p>
-            Don't have an account?{" "}
-            <Link to="/register">Create Account</Link>
-          </p>
-        </div>
+        {message && <p className="auth-message">{message}</p>}
+
+        <p className="auth-link">
+          Don't have an account? <Link to="/register">Register</Link>
+        </p>
+
+        <Link to="/" className="back-link">
+          ← Back to Campus Connect
+        </Link>
       </div>
-    </div>
+    </main>
   );
 }
 

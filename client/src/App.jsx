@@ -1,86 +1,29 @@
 import "./App.css";
+
 import {
   BrowserRouter,
   Routes,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 
-import Login from "Login";
-import Register from "Register";
+import Login from "./login.jsx";
+import Register from "./register.jsx";
+
+import Header from "./components/Header.jsx";
+import Hero from "./components/Hero.jsx";
+import PortalCard from "./components/PortalCard.jsx";
+import ActivityTracker from "./components/ActivityTracker.jsx";
+import PortalPage from "./components/PortalPage.jsx";
 
 
 function Home() {
+
   return (
     <main className="portal-page">
 
-      <header className="portal-header">
+      <Header />
 
-        <a
-          className="university-brand"
-          href="#home"
-          aria-label="RV University home"
-        >
-          <span className="university-badge">
-            RV
-          </span>
-
-          <span>
-            <strong>
-              RV UNIVERSITY<sup>®</sup>
-            </strong>
-
-            <small>
-              School of Computer Science & Engineering
-            </small>
-          </span>
-        </a>
-
-
-        <nav aria-label="Main navigation">
-
-          <a href="#about">
-            About
-          </a>
-
-          <a href="#contact">
-            Contact
-          </a>
-
-          <Link
-            to="/login"
-            className="btn-secondary"
-          >
-            Login
-          </Link>
-
-          <Link
-            to="/register"
-            className="btn-primary"
-          >
-            Register
-          </Link>
-
-        </nav>
-
-      </header>
-
-
-      <section
-        className="portal-hero"
-        id="home"
-      >
-        <div className="hero-content">
-
-          <span className="course-label">
-            CS3301 - FULL STACK DEVELOPMENT
-          </span>
-
-          {/* Your existing hero content goes here */}
-
-        </div>
-      </section>
-
+      <Hero />
 
       <section
         className="roles-section"
@@ -91,15 +34,59 @@ function Home() {
           CAMPUS CONNECT
         </p>
 
-        {/* Your existing roles content goes here */}
+        <h2>
+          Campus Life & Portal Highlights
+        </h2>
+
+        <p className="section-intro">
+          Access important university services through
+          one simple digital platform.
+        </p>
+
+        <div className="role-grid">
+
+          <PortalCard
+            title="Student Portal"
+            description="Access courses, schedules and academic information."
+            icon="S"
+            className=""
+            to="/student-portal"
+          />
+
+          <PortalCard
+            title="Faculty Portal"
+            description="Manage classes, announcements and student activities."
+            icon="F"
+            className="faculty-icon"
+            to="/faculty-portal"
+          />
+
+          <PortalCard
+            title="Administration Portal"
+            description="Manage university services and campus activities."
+            icon="A"
+            className="admin-icon"
+            to="/administration-portal"
+          />
+
+        </div>
 
       </section>
 
 
+      <ActivityTracker />
+
+
       <footer id="about">
+
         <span>
           © 2026 RV University · School of Computer Science & Engineering
         </span>
+
+        <span>
+          CS3301 - Full Stack Development
+        </span>
+
       </footer>
 
     </main>
@@ -108,6 +95,7 @@ function Home() {
 
 
 function App() {
+
   return (
     <BrowserRouter>
 
@@ -126,6 +114,21 @@ function App() {
         <Route
           path="/register"
           element={<Register />}
+        />
+
+        <Route
+          path="/student-portal"
+          element={<PortalPage portal="student" />}
+        />
+
+        <Route
+          path="/faculty-portal"
+          element={<PortalPage portal="faculty" />}
+        />
+
+        <Route
+          path="/administration-portal"
+          element={<PortalPage portal="administration" />}
         />
 
       </Routes>
