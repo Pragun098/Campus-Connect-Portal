@@ -1,60 +1,106 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { apiUrl } from "../api.js";
 
 function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    Boolean(localStorage.getItem("campusAuthUser"))
-  );
+  const [user, setUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("campusAuthUser") || "null");
+    } catch {
+      return null;
+    }
+  });
   const [logoutMessage, setLogoutMessage] = useState("");
-  const activePortal = localStorage.getItem("campusActivePortal");
-  const portalPath = activePortal ? `/${activePortal}-portal` : "/";
+
+  useEffect(() => {
+    function syncAuth() {
+      try {
+        setUser(JSON.parse(localStorage.getItem("campusAuthUser") || "null"));
+      } catch {
+        setUser(null);
+      }
+    }
+    window.addEventListener("storage", syncAuth);
+    return () => window.removeEventListener("storage", syncAuth);
+  }, []);
+
+  const isLoggedIn = Boolean(user);
+  const portalPath = user?.portal ? `/${user.portal}-portal` : "/";
 
   async function handleLogout() {
     try {
-      const response = await fetch("/api/auth/logout", { method: "POST" });
+      const response = await fetch(apiUrl("/api/auth/logout"), {
+        method: "POST",
+        credentials: "include"
+      });
       if (!response.ok && response.status !== 401) {
         const result = await response.json();
         setLogoutMessage(result.message || "Unable to sign out.");
         return;
       }
     } catch {
-      setLogoutMessage("Could not reach the server to sign out. Please try again.");
-      return;
+      // Ignore network errors on signout and clean local state
     }
 
     localStorage.removeItem("campusAuthUser");
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("campusActivePortal");
-    setIsLoggedIn(false);
+    setUser(null);
+    window.location.href = "/";
   }
 
   return (
     <header className="portal-header">
-      <a className="university-brand" href="#home">
+      <Link className="university-brand" to="/">
         <span className="university-badge">RV</span>
-
         <span>
           <strong>RV UNIVERSITY</strong>
           <small>School of Computer Science & Engineering</small>
         </span>
-      </a>
+      </Link>
 
-      <nav>
+      <nav className="header-nav">
+        <a href="#roles">Portals</a>
+        <a href="#gallery">Campus Life</a>
         <a href="#about">About</a>
-        <a href="#contact">Contact</a>
 
-        {isLoggedIn && (
-          <>
-            <Link to={portalPath} className="login-link">
-              My portal
+        {isLoggedIn ? (
+          <div className="header-auth-group">
+            <span className="user-pill-tag">
+              <span className="user-pill-avatar">
+                {user?.name ? user.name[0].toUpperCase() : "U"}
+              </span>
+              <span className="user-pill-name">{user?.name}</span>
+              <span className={`portal-tag-badge portal-tag-${user?.portal}`}>
+                {user?.portal}
+              </span>
+            </span>
+
+            <Link to={portalPath} className="header-portal-btn">
+              Dashboard →
             </Link>
-            <button className="header-logout" onClick={handleLogout}>
-              Log out
+
+            <button
+              type="button"
+              className="header-logout-btn"
+              onClick={handleLogout}
+            >
+              Sign Out
             </button>
-          </>
+          </div>
+        ) : (
+          <div className="header-auth-group">
+            <Link to="/login" className="header-signin-btn">
+              Sign In
+            </Link>
+            <Link to="/register" className="header-register-btn">
+              Register
+            </Link>
+          </div>
         )}
       </nav>
-      {logoutMessage && <p role="alert">{logoutMessage}</p>}
+
+      {logoutMessage && <p className="header-logout-error" role="alert">{logoutMessage}</p>}
     </header>
   );
 }

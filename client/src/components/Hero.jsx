@@ -18,9 +18,14 @@ function Hero() {
           people who make university life happen.
         </p>
 
-        <a href="#roles" className="hero-button">
-          Explore your portal <span aria-hidden="true">↗</span>
-        </a>
+        <div className="hero-cta-group">
+          <a href="#roles" className="hero-button">
+            Access Portals <span aria-hidden="true">→</span>
+          </a>
+          <a href="#gallery" className="hero-button hero-button-secondary">
+            Campus Life & Spaces 📸
+          </a>
+        </div>
 
         <div className="hero-note">
           <span className="hero-note-avatars" aria-hidden="true">
@@ -28,7 +33,7 @@ function Hero() {
             <i>F</i>
             <i>A</i>
           </span>
-          <span>One connected community</span>
+          <span>One connected community · Students, Faculty & Staff</span>
         </div>
       </div>
 

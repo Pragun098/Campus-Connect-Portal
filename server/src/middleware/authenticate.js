@@ -17,10 +17,13 @@ function getSessionToken(req) {
 }
 
 function setSessionCookie(res, token, maxAgeSeconds) {
-  const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+  const sameSite = process.env.SESSION_COOKIE_SAME_SITE || 'Strict';
+  const secure = process.env.NODE_ENV === 'production' || sameSite.toLowerCase() === 'none'
+    ? '; Secure'
+    : '';
   res.setHeader(
     'Set-Cookie',
-    `${SESSION_COOKIE}=${token}; HttpOnly; Path=/; SameSite=Strict; Max-Age=${maxAgeSeconds}${secure}`
+    `${SESSION_COOKIE}=${token}; HttpOnly; Path=/; SameSite=${sameSite}; Max-Age=${maxAgeSeconds}${secure}`
   );
 }
 

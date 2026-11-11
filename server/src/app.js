@@ -8,13 +8,26 @@ const noteRoutes = require('./routes/noteRoutes');
 const authRoutes = require('./routes/authRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const User = require('./models/User');
+const Notice = require('./models/Notice');
+const Assignment = require('./models/Assignment');
+const Attendance = require('./models/Attendance');
 const { hashPassword } = require('./utils/passwords');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const allowedClientOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173,http://127.0.0.1:5173')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin(origin, callback) {
+    callback(null, !origin || allowedClientOrigins.includes(origin));
+  },
+  credentials: true
+}));
 app.use(logger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -60,12 +73,96 @@ async function createBootstrapAdministrator() {
   console.log(`Created bootstrap administrator account for ${email}.`);
 }
 
+async function seedDemoData() {
+  const demoUsers = [
+    { name: 'Campus Administrator', email: 'admin@campus.edu', pass: 'admin123', portal: 'administration' },
+    { name: 'Dr. Sarah Adams', email: 'faculty@campus.edu', pass: 'faculty123', portal: 'faculty' },
+    { name: 'Alex Johnson', email: 'student@campus.edu', pass: 'student123', portal: 'student' }
+  ];
+
+  const map = {};
+  for (const d of demoUsers) {
+    let u = await User.findOne({ email: d.email });
+    if (!u) {
+      const { salt, hash } = await hashPassword(d.pass);
+      u = await User.create({
+        name: d.name,
+        email: d.email,
+        passwordHash: hash,
+        passwordSalt: salt,
+        portal: d.portal
+      });
+      console.log(`Created default demo user: ${d.email} (${d.portal})`);
+    }
+    map[d.portal] = u;
+  }
+
+  const noticeCount = await Notice.countDocuments();
+  if (noticeCount === 0 && map.administration) {
+    await Notice.create([
+      {
+        title: 'Mid-Semester Examination Schedule Announced',
+        description: 'The schedule for the upcoming mid-semester examinations has been published on the portal. Please verify your course timings.',
+        category: 'Academic',
+        createdBy: map.administration._id
+      },
+      {
+        title: 'Annual Tech Innovators Hackathon 2026',
+        description: 'Registrations are open for the 48-hour Campus Connect Hackathon. Attractive prizes and incubation opportunities for winning teams.',
+        category: 'Event',
+        createdBy: map.administration._id
+      },
+      {
+        title: 'Central Library Extended Study Hours',
+        description: 'Starting this week, the digital research library and study commons will remain open 24/7 with campus ID card access.',
+        category: 'Campus',
+        createdBy: map.administration._id
+      }
+    ]);
+  }
+
+  const assignmentCount = await Assignment.countDocuments();
+  if (assignmentCount === 0 && map.faculty) {
+    const nextWeek = new Date();
+    nextWeek.setDate(nextWeek.getDate() + 7);
+    const twoWeeks = new Date();
+    twoWeeks.setDate(twoWeeks.getDate() + 14);
+
+    await Assignment.create([
+      {
+        course: 'CS3301 Full Stack Development',
+        title: 'REST API & Authentication Frontend Portal',
+        description: 'Implement full-stack authentication flow with JWT or secure sessions and interactive dashboard components.',
+        dueDate: nextWeek,
+        createdBy: map.faculty._id
+      },
+      {
+        course: 'CS3302 Cloud Computing & DevOps',
+        title: 'Containerization and Microservices Deployment',
+        description: 'Deploy multi-tier containerized architecture using Docker Compose and configure automated health monitoring.',
+        dueDate: twoWeeks,
+        createdBy: map.faculty._id
+      }
+    ]);
+  }
+
+  const attendanceCount = await Attendance.countDocuments();
+  if (attendanceCount === 0 && map.student && map.faculty) {
+    const today = new Date();
+    await Attendance.create([
+      { student: map.student._id, course: 'CS3301 Full Stack Development', date: today, status: 'present', markedBy: map.faculty._id },
+      { student: map.student._id, course: 'CS3302 Cloud Computing', date: today, status: 'present', markedBy: map.faculty._id }
+    ]);
+  }
+}
+
 // 2. Root / Health Check Route
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
     message: 'Welcome to Campus Connect RESTful API Server',
     course: 'CS3301 - Full Stack Development',
+    experiment: 'Experiment 6 - Node.js and Express RESTful API',
     endpoints: {
       authentication: 'POST /api/auth/register | POST /api/auth/login | GET /api/auth/me | POST /api/auth/logout | POST /api/auth/users (administrator only)',
       dashboard: 'GET /api/dashboard/assignments | POST /api/dashboard/assignments (faculty) | GET /api/dashboard/attendance | POST /api/dashboard/attendance (faculty) | GET /api/dashboard/students (faculty) | GET /api/dashboard/notices | POST /api/dashboard/notices (administrator)',
@@ -98,8 +195,9 @@ if (process.env.NODE_ENV !== 'test') {
       console.log('Connected to MongoDB.');
       try {
         await createBootstrapAdministrator();
+        await seedDemoData();
       } catch (error) {
-        console.error('Unable to create the bootstrap administrator:', error.message);
+        console.error('Unable to create bootstrap/seed data:', error.message);
       }
     })
     .catch((error) => {

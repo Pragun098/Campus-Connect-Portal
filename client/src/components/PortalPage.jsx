@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { apiUrl } from "../api.js";
 
 const portalContent = {
   student: {
@@ -17,8 +18,9 @@ const portalContent = {
 };
 
 async function requestJson(path, options = {}) {
-  const response = await fetch(path, {
+  const response = await fetch(apiUrl(path), {
     ...options,
+    credentials: "include",
     headers: {
       ...(options.body ? { "Content-Type": "application/json" } : {}),
       ...options.headers
@@ -520,7 +522,10 @@ function PortalPage({ portal }) {
 
   async function handleLogout() {
     try {
-      const response = await fetch("/api/auth/logout", { method: "POST" });
+      const response = await fetch(apiUrl("/api/auth/logout"), {
+        method: "POST",
+        credentials: "include"
+      });
       if (!response.ok && response.status !== 401) {
         const result = await response.json();
         setLogoutMessage(result.message || "Unable to sign out.");

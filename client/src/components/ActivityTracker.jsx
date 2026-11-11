@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { apiUrl } from "../api.js";
 
 function ActivityTracker() {
   const [notes, setNotes] = useState([]);
@@ -10,19 +11,19 @@ function ActivityTracker() {
   const [editingId, setEditingId] = useState(null);
   const [editingText, setEditingText] = useState("");
 
-  const API_URL = "http://localhost:5000/api/notes";
+  const API_URL = apiUrl("/api/notes");
 
   // 1. Fetch all notes from MongoDB (GET /api/notes)
   async function fetchNotes() {
     try {
       setLoading(true);
-      const res = await axios.get(API_URL);
+      const res = await axios.get(API_URL, { withCredentials: true });
       setNotes(res.data);
       setDbStatus("Connected (student_demo_db)");
       setError(null);
     } catch (err) {
       console.error("Error fetching notes from MongoDB:", err);
-      setError("Unable to connect to MongoDB at http://localhost:5000/api/notes");
+      setError("Unable to connect to the server. Check your connection and try again.");
       setDbStatus("Disconnected");
     } finally {
       setLoading(false);
@@ -30,6 +31,7 @@ function ActivityTracker() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchNotes();
   }, []);
 
@@ -42,7 +44,7 @@ function ActivityTracker() {
       // Body matches PDF: { text: req.body.text }
       const res = await axios.post(API_URL, {
         text: newNoteText.trim()
-      });
+      }, { withCredentials: true });
 
       // Append saved document returned by server (PDF: res.status(201).json(newNote))
       setNotes((prev) => [res.data, ...prev]);
@@ -57,7 +59,7 @@ function ActivityTracker() {
   // 3. Delete note from MongoDB (DELETE /api/notes/:id)
   async function handleDeleteNote(id) {
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await axios.delete(`${API_URL}/${id}`, { withCredentials: true });
       setNotes((prev) => prev.filter((note) => (note._id || note.id) !== id));
     } catch (err) {
       console.error("Error deleting note:", err);
@@ -71,7 +73,7 @@ function ActivityTracker() {
     try {
       const res = await axios.put(`${API_URL}/${id}`, {
         text: editingText.trim()
-      });
+      }, { withCredentials: true });
       setNotes((prev) =>
         prev.map((note) => ((note._id || note.id) === id ? res.data : note))
       );
