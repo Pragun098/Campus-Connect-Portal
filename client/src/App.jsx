@@ -2,9 +2,11 @@ import "./App.css";
 
 import {
   BrowserRouter,
+  Navigate,
   Routes,
   Route
 } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import Login from "./login.jsx";
 import Register from "./register.jsx";
@@ -12,9 +14,70 @@ import Register from "./register.jsx";
 import Header from "./components/Header.jsx";
 import Hero from "./components/Hero.jsx";
 import PortalCard from "./components/PortalCard.jsx";
-import ActivityTracker from "./components/ActivityTracker.jsx";
 import PortalPage from "./components/PortalPage.jsx";
 
+function RequireAuth({ children, portal }) {
+  const [status, setStatus] = useState(
+    localStorage.getItem("campusAuthUser") ? "checking" : "unauthenticated"
+  );
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (!localStorage.getItem("campusAuthUser")) {
+      return;
+    }
+
+    fetch("/api/auth/me")
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) {
+          if (response.status === 401) {
+            localStorage.removeItem("campusAuthUser");
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("campusActivePortal");
+            setStatus("unauthenticated");
+          } else {
+            setStatus("error");
+          }
+          return;
+        }
+
+        localStorage.setItem("campusAuthUser", JSON.stringify(result.user));
+        localStorage.setItem("campusActivePortal", result.user.portal);
+        setUser(result.user);
+        setStatus("authorized");
+      })
+      .catch(() => setStatus("error"));
+  }, []);
+
+  if (status === "checking") {
+    return <main className="auth-page"><p>Checking your account...</p></main>;
+  }
+
+  if (status === "error") {
+    return (
+      <main className="auth-page">
+        <p role="alert">Unable to verify your sign-in. Check your connection and reload.</p>
+      </main>
+    );
+  }
+
+  if (status === "unauthenticated") {
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={portal ? { portal } : undefined}
+      />
+    );
+  }
+
+  if (portal && user.portal !== portal) {
+    return <Navigate to={`/${user.portal}-portal`} replace />;
+  }
+
+  return children;
+}
 
 function Home() {
 
@@ -72,11 +135,6 @@ function Home() {
         </div>
 
       </section>
-
-
-      <ActivityTracker />
-
-
       <footer id="about">
 
         <span>
@@ -95,6 +153,14 @@ function Home() {
 
 
 function App() {
+  useEffect(() => {
+    localStorage.removeItem("campusUser");
+    localStorage.removeItem("authToken");
+    if (!localStorage.getItem("campusAuthUser")) {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("campusActivePortal");
+    }
+  }, []);
 
   return (
     <BrowserRouter>
@@ -118,17 +184,29 @@ function App() {
 
         <Route
           path="/student-portal"
-          element={<PortalPage portal="student" />}
+          element={
+            <RequireAuth portal="student">
+              <PortalPage portal="student" />
+            </RequireAuth>
+          }
         />
 
         <Route
           path="/faculty-portal"
-          element={<PortalPage portal="faculty" />}
+          element={
+            <RequireAuth portal="faculty">
+              <PortalPage portal="faculty" />
+            </RequireAuth>
+          }
         />
 
         <Route
           path="/administration-portal"
-          element={<PortalPage portal="administration" />}
+          element={
+            <RequireAuth portal="administration">
+              <PortalPage portal="administration" />
+            </RequireAuth>
+          }
         />
 
       </Routes>

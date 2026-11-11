@@ -1,33 +1,52 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const portal = location.state?.portal;
+  const portalPaths = {
+    student: "/student-portal",
+    faculty: "/faculty-portal",
+    administration: "/administration-portal"
+  };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleLogin(event) {
+  async function handleLogin(event) {
     event.preventDefault();
+    setIsSubmitting(true);
+    setMessage("");
 
-    const savedUser = JSON.parse(localStorage.getItem("campusUser"));
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, ...(portal ? { portal } : {}) })
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        setMessage(result.message || "Unable to sign in.");
+        return;
+      }
 
-    if (!savedUser) {
-      setMessage("No account found. Please register first.");
-      return;
-    }
+      const destination = portalPaths[result.user.portal];
+      if (!destination) {
+        setMessage("This account has an unsupported portal. Contact an administrator.");
+        return;
+      }
 
-    if (email === savedUser.email && password === savedUser.password) {
-      setMessage("Login successful! Welcome to Campus Connect.");
-
+      localStorage.setItem("campusAuthUser", JSON.stringify(result.user));
       localStorage.setItem("isLoggedIn", "true");
-
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
-    } else {
-      setMessage("Incorrect email or password.");
+      localStorage.setItem("campusActivePortal", result.user.portal);
+      navigate(destination, { replace: true });
+    } catch {
+      setMessage("Could not reach the server. Check your connection and try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -35,7 +54,11 @@ function Login() {
     <main className="auth-page">
       <div className="auth-box">
         <h1>Login</h1>
-        <p>Login to Campus Connect Portal</p>
+        <p>
+          {portal
+            ? `Sign in to your ${portal} portal`
+            : "Login to Campus Connect Portal"}
+        </p>
 
         <form onSubmit={handleLogin}>
           <label>Email</label>
@@ -43,6 +66,8 @@ function Login() {
             type="email"
             placeholder="Enter your email"
             value={email}
+            autoComplete="email"
+            required
             onChange={(event) => setEmail(event.target.value)}
           />
 
@@ -51,16 +76,23 @@ function Login() {
             type="password"
             placeholder="Enter your password"
             value={password}
+            autoComplete="current-password"
+            required
             onChange={(event) => setPassword(event.target.value)}
           />
 
-          <button type="submit">Login</button>
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Signing in..." : "Login"}
+          </button>
         </form>
 
         {message && <p className="auth-message">{message}</p>}
 
         <p className="auth-link">
-          Don't have an account? <Link to="/register">Register</Link>
+          Don't have an account?{" "}
+          <Link to="/register" state={location.state}>
+            Register
+          </Link>
         </p>
 
         <Link to="/" className="back-link">
